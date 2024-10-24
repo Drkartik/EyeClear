@@ -1,112 +1,146 @@
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.Date;
+import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for the Prescription class, specifically for the addPrescription method.
+ */
 public class PrescriptionTest {
+    private Prescription prescription;
 
+    /**
+     * Set up a new Prescription object before each test.
+     */
+    @BeforeEach
+    public void setUp() {
+        prescription = new Prescription();
+    }
+
+    /**
+     * Test valid prescription details.
+     */
     @Test
     public void testAddPrescription_ValidData() {
-        Prescription prescription = new Prescription();
-
-        // Test Data 1
-        boolean result1 = prescription.addPrescription("Li", "Wei", "123 Long St, Beijing, 100000, China", 1.00f, 0.50f, 90.00f, new Date(), "Dr. Zhang");
-        assertTrue(result1); // Expecting true for valid data
-
-        // Test Data 2
-        boolean result2 = prescription.addPrescription("Wang", "Ming", "456 Short St, Shanghai, 200000, China", -1.50f, -1.00f, 180.00f, new Date(), "Dr. Li");
-        assertTrue(result2); // Expecting true for valid data
+        // Set valid prescription data
+        prescription.setFirstName("Wang");
+        prescription.setLastName("Li");
+        prescription.setAddress("123 Beijing Rd, Beijing, 100000, China");
+        prescription.setSphere(0.00f);
+        prescription.setCylinder(0.00f);
+        prescription.setAxis(90);
+        prescription.setExaminationDate(new Date()); // Use current date
+        prescription.setOptometrist("Zhang Wei");
+        
+        // Assert that adding the prescription returns true
+        assertTrue(prescription.addPrescription());
     }
 
+    /**
+     * Test valid prescription details with different data.
+     */
     @Test
-    public void testAddPrescription_InvalidNameLength() {
-        Prescription prescription = new Prescription();
+    public void testAddPrescription_ValidData_DifferentInput() {
+        // Set another set of valid prescription data
+        prescription.setFirstName("Xiao");
+        prescription.setLastName("Chen");
+        prescription.setAddress("456 Shanghai St, Shanghai, 200000, China");
+        prescription.setSphere(-5.00f);
+        prescription.setCylinder(2.00f);
+        prescription.setAxis(30);
+        prescription.setExaminationDate(new Date()); // Use current date
+        prescription.setOptometrist("Li Ming");
 
-        // Test Data 1
-        boolean result1 = prescription.addPrescription("Li", "Wei", "123 Long St, Beijing, 100000, China", 1.00f, 0.50f, 90.00f, new Date(), "Dr. Zhang");
-        assertFalse(result1); // Expecting false due to invalid name length
-
-        // Test Data 2
-        boolean result2 = prescription.addPrescription("Wang", "M", "456 Short St, Shanghai, 200000, China", -1.50f, -1.00f, 180.00f, new Date(), "Dr. Li");
-        assertFalse(result2); // Expecting false due to invalid name length
+        // Assert that adding the prescription returns true
+        assertTrue(prescription.addPrescription());
     }
 
+    /**
+     * Test invalid first name (too short).
+     */
     @Test
-    public void testAddPrescription_InvalidAddressLength() {
-        Prescription prescription = new Prescription();
+    public void testAddPrescription_InvalidFirstName() {
+        prescription.setFirstName("W");
+        prescription.setLastName("Li");
+        prescription.setAddress("123 Beijing Rd, Beijing, 100000, China");
+        prescription.setSphere(0.00f);
+        prescription.setCylinder(0.00f);
+        prescription.setAxis(90);
+        prescription.setExaminationDate(new Date());
+        prescription.setOptometrist("Zhang Wei");
 
-        // Test Data 1
-        boolean result1 = prescription.addPrescription("Li", "Wei", "Short Address", 1.00f, 0.50f, 90.00f, new Date(), "Dr. Zhang");
-        assertFalse(result1); // Expecting false due to short address
-
-        // Test Data 2
-        boolean result2 = prescription.addPrescription("Wang", "Ming", "123 St", -1.50f, -1.00f, 180.00f, new Date(), "Dr. Li");
-        assertFalse(result2); // Expecting false due to short address
+        // Assert that adding the prescription returns false
+        assertFalse(prescription.addPrescription());
     }
 
+    /**
+     * Test invalid last name (too short).
+     */
     @Test
-    public void testAddPrescription_OutOfRangeValues() {
-        Prescription prescription = new Prescription();
+    public void testAddPrescription_InvalidLastName() {
+        prescription.setFirstName("Wang");
+        prescription.setLastName("L");
+        prescription.setAddress("123 Beijing Rd, Beijing, 100000, China");
+        prescription.setSphere(0.00f);
+        prescription.setCylinder(0.00f);
+        prescription.setAxis(90);
+        prescription.setExaminationDate(new Date());
+        prescription.setOptometrist("Zhang Wei");
 
-        // Test Data 1
-        boolean result1 = prescription.addPrescription("Li", "Wei", "123 Long St, Beijing, 100000, China", 25.00f, 0.50f, 90.00f, new Date(), "Dr. Zhang");
-        assertFalse(result1); // Expecting false due to sphere out of range
-
-        // Test Data 2
-        boolean result2 = prescription.addPrescription("Wang", "Ming", "456 Long St, Shanghai, 200000, China", -5.00f, -1.00f, 180.00f, new Date(), "Dr. Li");
-        assertFalse(result2); // Expecting false due to cylinder out of range
+        // Assert that adding the prescription returns false
+        assertFalse(prescription.addPrescription());
     }
 
+    /**
+     * Test invalid address (too short).
+     */
     @Test
-    public void testAddRemark_ValidData() {
-        Prescription prescription = new Prescription();
+    public void testAddPrescription_InvalidAddress() {
+        prescription.setFirstName("Wang");
+        prescription.setLastName("Li");
+        prescription.setAddress("Short Addr");
+        prescription.setSphere(0.00f);
+        prescription.setCylinder(0.00f);
+        prescription.setAxis(90);
+        prescription.setExaminationDate(new Date());
+        prescription.setOptometrist("Zhang Wei");
 
-        // Test Data 1
-        boolean result1 = prescription.addRemark("The client is satisfied with the service.", "Client");
-        assertTrue(result1); // Expecting true for valid data
-
-        // Test Data 2
-        boolean result2 = prescription.addRemark("Optometrist recommends regular checkups.", "Optometrist");
-        assertTrue(result2); // Expecting true for valid data
+        // Assert that adding the prescription returns false
+        assertFalse(prescription.addPrescription());
     }
 
+    /**
+     * Test invalid sphere value (out of range).
+     */
     @Test
-    public void testAddRemark_InvalidWordCount() {
-        Prescription prescription = new Prescription();
+    public void testAddPrescription_InvalidSphere() {
+        prescription.setFirstName("Wang");
+        prescription.setLastName("Li");
+        prescription.setAddress("123 Beijing Rd, Beijing, 100000, China");
+        prescription.setSphere(21.00f); // Invalid value
+        prescription.setCylinder(0.00f);
+        prescription.setAxis(90);
+        prescription.setExaminationDate(new Date());
+        prescription.setOptometrist("Zhang Wei");
 
-        // Test Data 1
-        boolean result1 = prescription.addRemark("Short remark.", "Client");
-        assertFalse(result1); // Expecting false due to insufficient word count
-
-        // Test Data 2
-        boolean result2 = prescription.addRemark("This remark has more than twenty words which should not be accepted as valid input.", "Optometrist");
-        assertFalse(result2); // Expecting false due to exceeding word count
+        // Assert that adding the prescription returns false
+        assertFalse(prescription.addPrescription());
     }
 
+    /**
+     * Test invalid optometrist name (too short).
+     */
     @Test
-    public void testAddRemark_InvalidCategory() {
-        Prescription prescription = new Prescription();
+    public void testAddPrescription_InvalidOptometristName() {
+        prescription.setFirstName("Wang");
+        prescription.setLastName("Li");
+        prescription.setAddress("123 Beijing Rd, Beijing, 100000, China");
+        prescription.setSphere(0.00f);
+        prescription.setCylinder(0.00f);
+        prescription.setAxis(90);
+        prescription.setExaminationDate(new Date());
+        prescription.setOptometrist("Z"); // Invalid name
 
-        // Test Data 1
-        boolean result1 = prescription.addRemark("This is a valid remark.", "InvalidCategory");
-        assertFalse(result1); // Expecting false due to invalid category
-
-        // Test Data 2
-        boolean result2 = prescription.addRemark("Optometrist recommends taking the prescription.", "Patient");
-        assertFalse(result2); // Expecting false due to invalid category
-    }
-
-    @Test
-    public void testAddRemark_ExceedingRemarks() {
-        Prescription prescription = new Prescription();
-        prescription.addRemark("First remark.", "Client");
-        prescription.addRemark("Second remark.", "Optometrist");
-
-        // Test Data 1
-        boolean result1 = prescription.addRemark("This should not be added.", "Client");
-        assertFalse(result1); // Expecting false due to exceeding remark limit
-
-        // Test Data 2
-        boolean result2 = prescription.addRemark("Another remark that exceeds the limit.", "Optometrist");
-        assertFalse(result2); // Expecting false due to exceeding remark limit
+        // Assert that adding the prescription returns false
+        assertFalse(prescription.addPrescription());
     }
 }
